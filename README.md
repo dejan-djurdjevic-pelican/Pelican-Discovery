@@ -1,4 +1,4 @@
-# 🐧 Pelican Discovery Dashboard
+#  Pelican Discovery Dashboard
 
 A live trading signal discovery gateway built for the Pelican ecosystem. This dashboard integrates with the Copy-Trade.io Identity Server to provide secure access to real-time performance metrics for top signal providers.
 
