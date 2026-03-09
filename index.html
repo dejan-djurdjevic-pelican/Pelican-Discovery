@@ -155,34 +155,45 @@
         }
 
         function renderSpotlightItem(item) {
-            const list = document.getElementById("discovery-list");
-            const s = item.Strategy;
-            let rawValue = parseFloat(item.Value || 0);
-            if (item.Measure === "Percent" || rawValue < 2) { rawValue = rawValue * 100; }
-            const displayValue = rawValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const imageUrl = `https://assets.copy-trade.io/images/strategies/thumbnails/${s.Id}`;
-            const isCurrency = item.Measure === "Currency";
+    const list = document.getElementById("discovery-list");
+    const s = item.Strategy;
+    
+    let rawValue = parseFloat(item.Value || 0);
 
-            const div = document.createElement('div');
-            div.className = 'discovery-item';
-            div.onclick = () => fetchSPDetails(s.Id, s.Name);
-            div.innerHTML = `
-                <div style="display: flex; align-items: center; text-align: left;">
-                    <img src="${imageUrl}" onerror="this.onerror=null; this.src='https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';" 
-                         style="width: 50px; height: 50px; border-radius: 4px; margin-right: 15px; border: 1px solid #333; object-fit: cover; background: #222;">
-                    <div style="display: flex; flex-direction: column;">
-                        <strong style="color: #fff; font-size: 18px; margin-bottom: 4px;">${s.Name}</strong>
-                        <span style="color: #888; font-size: 12px;">Copiers: ${s.NumCopiers} | Rank: #${item.Rank}</span>
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <div class="return-box" style="color: #00ff00; border-color: #00ff00;">
-                        ${isCurrency ? '$' : ''}${displayValue}${isCurrency ? '' : '%'}
-                    </div>
-                    <div style="font-size: 10px; color: #555; margin-top: 4px; text-transform: uppercase;">${isCurrency ? 'USD' : item.Measure}</div>
-                </div>`;
-            list.appendChild(div);
-        }
+    // Keep your existing logic for Percent vs Currency
+    if (item.Measure === "Percent" || rawValue < 2) {
+        rawValue = rawValue * 100;
+    }
+
+    const displayValue = rawValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const imageUrl = `https://assets.copy-trade.io/images/strategies/thumbnails/${s.Id}`;
+    const isCurrency = item.Measure === "Currency";
+
+    // 1. Determine the color: Green for positive, Red for negative
+    const statusColor = rawValue >= 0 ? '#00ff00' : '#ff4444';
+
+    const div = document.createElement('div');
+    div.className = 'discovery-item';
+    div.onclick = () => fetchSPDetails(s.Id, s.Name);
+    div.innerHTML = `
+        <div style="display: flex; align-items: center; text-align: left;">
+            <img src="${imageUrl}" onerror="this.onerror=null; this.src='https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';" 
+                 style="width: 50px; height: 50px; border-radius: 4px; margin-right: 15px; border: 1px solid #333; object-fit: cover; background: #222;">
+            <div style="display: flex; flex-direction: column;">
+                <strong style="color: #fff; font-size: 18px; margin-bottom: 4px;">${s.Name}</strong>
+                <span style="color: #888; font-size: 12px;">Copiers: ${s.NumCopiers} | Rank: #${item.Rank}</span>
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <div class="return-box" style="color: ${statusColor}; border-color: ${statusColor};">
+                ${isCurrency ? '$' : ''}${displayValue}${isCurrency ? '' : '%'}
+            </div>
+            <div style="font-size: 10px; color: #555; margin-top: 4px; text-transform: uppercase;">
+                ${isCurrency ? 'USD' : item.Measure}
+            </div>
+        </div>`;
+    list.appendChild(div);
+}
 
         async function fetchSPDetails(id, name) {
             const list = document.getElementById("discovery-list");
