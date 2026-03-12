@@ -115,7 +115,7 @@
             document.getElementById("nav-controls").style.display = "block";
             document.getElementById("search-bar").style.display = "block";
             const user = await mgr.getUser();
-            document.getElementById("feed-title").innerText = "Pelican's best performing signals in January";
+            document.getElementById("feed-title").innerText = "Pelican's best performing signals";
             document.getElementById("search-bar").value = "";
             fetchTopMonthly(user.access_token);
         }
